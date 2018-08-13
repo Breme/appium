@@ -11,7 +11,7 @@ import traceback
 import time
 from uiautomator import Device
 from appium.webdriver.common.touch_action import TouchAction
-
+from mongo_db_commection import appium_db
 desired_caps = {}
 desired_caps['appPackage'] = 'com.google.android.music'
 desired_caps['appActivity'] = 'com.android.music.activitymanagement.TopLevelActivity'
@@ -46,6 +46,8 @@ try:
         print 'hey'
     def findElementByText(element_className,element_text):
 #         textElement=driver.find_element_by_xpath("//android.widget.Button[@text='Got it']")
+#         def getId():
+            
         textElement=driver.find_element_by_xpath("//"+element_className+"[contains(@text,"+element_text+")]")
         print "//"+element_className+"[contains(@text,"+element_text+")]"
         
@@ -59,28 +61,32 @@ try:
         print('----------------------------',textElement.parent)
         print('----------------------------',textElement.get_property)
         return textElement
-    def getAllElementDetails(elem1):
+    def getAllElementDetails(elem1,element_id,element_name):
         elementJson={}
-        elementJson["resourceId"] =elem1.get_attribute("resourceId")
-        elementJson["text"]= elem1.get_attribute("text")
-        elementJson["className"] =elem1.get_attribute("className")
+        elementDataJson={}
+        elementJson["elementId"]=element_id
+        elementJson["elementName"]=element_name
+        elementJson["element_data"]={}
+        elementDataJson["resourceId"] =elem1.get_attribute("resourceId")
+        elementDataJson["text"]= elem1.get_attribute("text")
+        elementDataJson["className"] =elem1.get_attribute("className")
 #         elementJson["package"]=driver.current_package()
-        elementJson["contentDesc"]=elem1.get_attribute("contentDescription")
-        elementJson["enabled"]=elem1.get_attribute("enabled")
-        elementJson["checkable"]=elem1.get_attribute("checkable")
-        elementJson["checked"]=elem1.get_attribute("checked")
-        elementJson["clickable"]=elem1.get_attribute("clickable")
-        elementJson["focusable"]=elem1.get_attribute("focusable")
-        elementJson["focused"]=elem1.get_attribute("focused")
-        elementJson["scrollable"]=elem1.get_attribute("scrollable")
-        elementJson["selected"]=elem1.get_attribute("selected")
-        elementJson["displayed"]=elem1.get_attribute("displayed")
-        elementJson["longClickable"]=elem1.get_attribute("longClickable")
-     
+        elementDataJson["contentDesc"]=elem1.get_attribute("contentDescription")
+        elementDataJson["enabled"]=elem1.get_attribute("enabled")
+        elementDataJson["checkable"]=elem1.get_attribute("checkable")
+        elementDataJson["checked"]=elem1.get_attribute("checked")
+        elementDataJson["clickable"]=elem1.get_attribute("clickable")
+        elementDataJson["focusable"]=elem1.get_attribute("focusable")
+        elementDataJson["focused"]=elem1.get_attribute("focused")
+        elementDataJson["scrollable"]=elem1.get_attribute("scrollable")
+        elementDataJson["selected"]=elem1.get_attribute("selected")
+        elementDataJson["displayed"]=elem1.get_attribute("displayed")
+        elementDataJson["longClickable"]=elem1.get_attribute("longClickable")
+        elementJson["element_data"]=elementDataJson
         return elementJson
-    print getAllElementDetails(findElementByText("android.widget.Button",u'Got'))
-    
-    
+#     print getAllElementDetails(findElementByText("android.widget.Button",u'Got it'))
+    testElement=getAllElementDetails(findElementByText("android.widget.Button",u'jj'),'ele100','eleName')
+    appium_db.insert_element_data('1000', '100', 'clickButton',testElement)
     
     # print d(text=elem.text).exists 
     # print d(text='Got it').exists 
